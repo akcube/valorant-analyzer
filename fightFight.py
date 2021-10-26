@@ -21,8 +21,8 @@ def TakeInput(items: list = [], Type: list = []):
     """Util function to quickly take input from user"""
     inputs = {}
     for idx, item in enumerate(items):
-        val = input('Please enter ' + item +
-                    ' (Type: ' + Type[idx] + '): ')
+        val = input(bcolors.GREEN + 'Please enter ' + item +
+                    ' (Type: ' + Type[idx] + '): ' + bcolors.RESET)
         inputs[item] = val
     return inputs
 
@@ -82,25 +82,27 @@ def get_agent_details():
     cur.execute(query)
     retval = cur.fetchall()
     for agent in retval:
+        print(bcolors.PURPLE)
         print(agent["name"])
         print("Signature abilities:")
+        print(bcolors.RESET)
         query = ("SELECT name FROM signature_ability WHERE agent_id = %d" % (agent["agent_id"]))
         cur.execute(query)
         namerows = cur.fetchall()
         for name in namerows:
-            print(name["name"])
+            print(bcolors.PURPLE + name["name"] + bcolors.RESET)
         print("")
 
 def get_total_wins_by_agent():
     """Get total wins and losses of a player for a particular agent"""
     try:
-        playerName = input("Enter player name: ")
-        playerTag = input("Enter player tag: ")
-        agentID = input("Enter agent ID: ")
+        playerName = input(bcolors.GREEN + "Enter player name: " + bcolors.RESET)
+        playerTag = input(bcolors.GREEN + "Enter player tag: " + bcolors.RESET)
+        agentID = input(bcolors.GREEN + "Enter agent ID: " + bcolors.RESET)
         query = ("SELECT SUM(wins) FROM plays "
                     "WHERE player_name = '%s' AND player_tag = '%s"
                     % (playerName, playerTag))
-        print(query)
+        print(bcolors.PURPLE + query + bcolors.RESET)
         cur.execute(query)
         con.commit()
     except Exception as e:
@@ -170,10 +172,10 @@ def partial_search_agent():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(row["name"])
+            print(bcolors.PURPLE + row["name"] + bcolors.RESET)
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed")
+        printError() 
 
 def partial_search_player():
     try:
@@ -182,16 +184,16 @@ def partial_search_player():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(row["name"])
+            print(bcolors.PURPLE + row["name"] + bcolors.RESET)
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed")
+        printError()
 
 def get_total_wins():
     """Get total wins and losses of a player"""
     try:
-        playerName = input("Enter player name: ")
-        playerTag = input("Enter player tag: ")
+        playerName = input(bcolors.GREEN + "Enter player name: " + bcolors.RESET)
+        playerTag = input(bcolors.GREEN + "Enter player tag: " + bcolors.RESET)
         query = ("SELECT team_id FROM 5_stack_stats WHERE player_name = '%s' AND player_tag = '%s'" % (playerName, playerTag))
         cur.execute(query)
         retval = cur.fetchall()
@@ -204,17 +206,17 @@ def get_total_wins():
             for count in retval2:
                 wins += int(count["wins"])
                 total += int(count["matches_played"])
-        print(f"Wins: {wins} | Losses: {total - wins}")
+        print(bcolors.PURPLE + f"Wins: {wins} | Losses: {total - wins}" + bcolors.RESET)
     except Exception as e:
-        print("Error: Operation failed")
+        printError()
         con.rollback()
 
 def get_total_wins_by_agent():
     """Get total wins and losses of a player for a particular agent"""
     try:
-        playerName = input("Enter player name: ")
-        playerTag = input("Enter player tag: ")
-        agentID = input("Enter agent ID: ")
+        playerName = input(bcolors.GREEN + "Enter player name: " + bcolors.RESET)
+        playerTag = input(bcolors.GREEN + "Enter player tag: " + bcolors.RESET)
+        agentID = input(bcolors.GREEN + "Enter agent ID: " + bcolors.RESET)
         query = ("SELECT wins, matches_played FROM plays WHERE player_name = '%s' AND player_tag = '%s' AND agent_id = '%s';" % (playerName, playerTag, agentID))
         cur.execute(query)
         retval = cur.fetchall()
@@ -223,9 +225,9 @@ def get_total_wins_by_agent():
         for entry in retval:
             wins += int(entry["wins"])
             total += int(entry["matches_played"])
-        print(f"Wins: {wins} | Losses: {total - wins}")
+        print(bcolors.PURPLE + f"Wins: {wins} | Losses: {total - wins}" + bcolors.RESET)
     except Exception as e:
-        print("Error: Operation failed.")
+        printError()
         con.rollback()
 
 def get_matches_between_two_teams():
@@ -345,11 +347,11 @@ while(1):
         # tmp = sp.call('clear', shell=True)
 
         if(con.open):
-            print("Connected")
+            print(bcolors.GREEN + "Connected" + bcolors.RESET)
         else:
-            print("Failed to connect")
+            print(bcolors.RED + "Failed to connect" + bcolors.RESET)
 
-        tmp = input("Enter any key to CONTINUE>")
+        tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE > " + bcolors.RESET)
 
         with con.cursor() as cur:
             while(1):
@@ -375,13 +377,13 @@ while(1):
                 print("17. Logout")
                 print(bcolors.RESET)
 
-                ch = int(input(bcolors.GREEN + "Enter choice> " + bcolors.RESET))
+                ch = int(input(bcolors.GREEN + "Enter choice > " + bcolors.RESET))
                 tmp = sp.call('clear', shell=True)
                 if ch == 20:
                     exit()
                 else:
                     dispatch(ch)
-                    tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE>" + bcolors.RESET)
+                    tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE > " + bcolors.RESET)
 
     except Exception as e:
         tmp = sp.call('clear', shell=True)
@@ -389,4 +391,4 @@ while(1):
         print("Error: Operation failed.")
         print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
         print(bcolors.RESET)
-        tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE>" + bcolors.RESET)
+        tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE > " + bcolors.RESET)
