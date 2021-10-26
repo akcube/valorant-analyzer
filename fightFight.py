@@ -361,7 +361,7 @@ def get_matches_between_two_teams():
 
         common = set(team_one_matches) & set(team_two_matches)
         for m in common:
-            print(m)
+            print(bcolors.PURPLE + m + bcolors.RESET)
 
     except Exception as e:
         printError()
@@ -371,7 +371,7 @@ def get_matches_between_two_teams():
 def get_kd():
     """Get list of all players with K/D >= x"""
     try:
-        x = input("Enter the value of x: ")
+        x = input(bcolors.GREEN + "Enter the value of x: " + bcolors.RESET)
         query = "SELECT name, tag FROM player;"
         cur.execute(query)
         retval = cur.fetchall()
@@ -390,9 +390,9 @@ def get_kd():
                 k += int(entry["kills"])
                 d += int(entry["deaths"])
             if d == 0:
-                print(f"Player name: {name} | Player tag: {tag}")
+                print(bcolors.GREEN + f"Player name: {name} | Player tag: {tag}" + bcolors.RESET)
             elif (k / d) >= float(x):
-                print(f"Player name: {name} | Player tag: {tag}")
+                print(bcolors.GREEN + f"Player name: {name} | Player tag: {tag}" + bcolors.RESET)
     except Exception as e:
         printError()
         con.rollback()
