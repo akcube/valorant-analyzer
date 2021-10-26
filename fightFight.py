@@ -3,6 +3,20 @@ import pymysql
 import pymysql.cursors
 import getpass
 
+class bcolors:
+    PURPLE = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def printError():
+    print(bcolors.RED + "Error: Operation failed." + bcolors.RESET)
+
 def TakeInput(items: list = [], Type: list = []):
     """Util function to quickly take input from user"""
     inputs = {}
@@ -21,10 +35,10 @@ def get_teams_by_player():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(row['team_id'])
+            print(bcolors.PURPLE + row['team_id'] + bcolors.RESET)
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
     return
 
 def get_matches_by_team():
@@ -36,10 +50,10 @@ def get_matches_by_team():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(row['match_id'])
+            print(bcolors.PURPLE + row['match_id'] + bcolors.RESET)
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
     return
 
 def get_round_stats():
@@ -54,11 +68,11 @@ def get_round_stats():
         retval = cur.fetchall()
         for row in retval:
             for key in row.keys():
-                print(f"{key} : {row[key]}")
+                print(bcolors.PURPLE + f"{key} : {row[key]}" + bcolors.RESET)
             print("")
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
     return
 
 
@@ -98,8 +112,8 @@ def get_total_wins_by_agent():
         cur.execute(query)
         con.commit()
     except Exception as e:
-        print("Error: Operation failed.")
         con.rollback()
+        printError()
     return
 
 def insert_player():
@@ -111,7 +125,7 @@ def insert_player():
         con.commit()
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
 
 def update_player_rating():
     """Updater player rating entry in database"""
@@ -122,7 +136,7 @@ def update_player_rating():
         con.commit()
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
 
 def update_player_region():
     """Updater player rating entry in database"""
@@ -133,7 +147,7 @@ def update_player_region():
         con.commit()
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed.")
+        printError()
 
 def update_agent_lore():
     """Update agent lore in database"""
@@ -144,7 +158,7 @@ def update_agent_lore():
         con.commit()
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed")
+        printError()
 
 def delete_player():
     """Delete player entry from database"""
@@ -155,7 +169,7 @@ def delete_player():
         con.commit()
     except Exception as e:
         con.rollback()
-        print("Error: Operation failed")
+        printError()
 
 def dispatch(ch):
     """
@@ -182,7 +196,7 @@ def dispatch(ch):
     elif(ch == 10):
         get_agent_details()
     else:
-        print("Error: Invalid Option")
+        print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
 
 # Global
@@ -215,6 +229,7 @@ while(1):
             while(1):
                 tmp = sp.call('clear', shell=True)
                 # Here taking example of Employee Mini-world
+                print(bcolors.BLUE)
                 print("1. Insert player into table")  # Hire an Employee
                 print("2. Update player rating in table")  # Fire an Employee
                 print("3. Update player region in table")  # Promote Employee
@@ -226,17 +241,20 @@ while(1):
                 print("9. Get the round stats of a player")
                 print("10. Get the signature abilities of an agent")
                 print("11. Logout")
+                print(bcolors.RESET)
 
-                ch = int(input("Enter choice> "))
+                ch = int(input(bcolors.GREEN + "Enter choice> " + bcolors.RESET))
                 tmp = sp.call('clear', shell=True)
                 if ch == 11:
                     exit()
                 else:
                     dispatch(ch)
-                    tmp = input("Enter any key to CONTINUE>")
+                    tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE>" + bcolors.RESET)
 
     except Exception as e:
         tmp = sp.call('clear', shell=True)
+        print(bcolors.RED)
         print("Error: Operation failed.")
         print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-        tmp = input("Enter any key to CONTINUE>")
+        print(bcolors.RESET)
+        tmp = input(bcolors.YELLOW + "Enter any key to CONTINUE>" + bcolors.RESET)
