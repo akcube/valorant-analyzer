@@ -91,14 +91,6 @@ def get_agent_details():
             print(name["name"])
         print("")
 
-def get_total_wins():
-    """Get total wins and losses of a player"""
-    playerName = input("Enter player name: ")
-    playerTag = input("Enter player tag: ")
-    query = ("SELECT SUM(team.wins) "
-                "FROM team "
-                "INNER JOIN 5_stack_stats")
-
 def get_total_wins_by_agent():
     """Get total wins and losses of a player for a particular agent"""
     try:
@@ -171,6 +163,52 @@ def delete_player():
         con.rollback()
         printError()
 
+def partial_search_agent():
+    try:
+        agentInfo = TakeInput(["partial_agent_name"], ["VARCHAR"])
+        query = ("SELECT name FROM agent WHERE name LIKE '%%%s%%'" % (agentInfo["partial_agent_name"]))
+        cur.execute(query)
+        retval = cur.fetchall()
+        for row in retval:
+            print(row["name"])
+    except Exception as e:
+        con.rollback()
+        print("Error: Operation failed")
+
+def partial_search_player():
+    try:
+        playerInfo = TakeInput(["partial_player_name"], ["VARCHAR"])
+        query = ("SELECT name FROM player WHERE name LIKE '%%%s%%'" % (playerInfo["partial_player_name"]))
+        cur.execute(query)
+        retval = cur.fetchall()
+        for row in retval:
+            print(row["name"])
+    except Exception as e:
+        con.rollback()
+        print("Error: Operation failed")
+
+def get_total_wins():
+    """Get total wins and losses of a player"""
+    try:
+        playerName = input("Enter player name: ")
+        playerTag = input("Enter player tag: ")
+        query = ("SELECT team_id FROM 5_stack_stats WHERE player_name = '%s' AND player_tag = '%s'" % (playerName, playerTag))
+        cur.execute(query)
+        retval = cur.fetchall()
+        wins = 0
+        total = 0
+        for team in retval:
+            query = ("SELECT wins, matches_played FROM team WHERE team_id = '%s'" % (team["team_id"]))
+            cur.execute(query)
+            retval2 = cur.fetchall()
+            for count in retval2:
+                wins += int(count["wins"])
+                total += int(count["matches_played"])
+        print(f"Wins: {wins} | Losses: {total - wins}")
+    except Exception as e:
+        print("Error: Operation failed")
+        con.rollback()
+
 def dispatch(ch):
     """
     Function that maps helper functions to option entered
@@ -195,9 +233,17 @@ def dispatch(ch):
         get_round_stats()
     elif(ch == 10):
         get_agent_details()
+    elif(ch == 11):
+        partial_search_agent()
+    elif(ch == 12):
+        partial_search_player()
+    elif(ch == 13):
+        get_total_wins()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
+
+password = getpass.getpass("Password: ")
 
 # Global
 while(1):
@@ -205,7 +251,6 @@ while(1):
     
     # Can be skipped if you want to hardcode username and password
     # username = input("Username: ")
-    password = getpass.getpass("Password: ")
 
     try:
         # Set db name accordingly which have been create by you
@@ -240,12 +285,15 @@ while(1):
                 print("8. Get all the matches a team has played")
                 print("9. Get the round stats of a player")
                 print("10. Get the signature abilities of an agent")
-                print("11. Logout")
-                print(bcolors.RESET)
+                print("11. Partial search match for agent")
+                print("12. Partial search match for player name")
+                print("13. Get total wins/losses of player")
+                print("14. Logout")
+                print(bcolors.BLUE)
 
                 ch = int(input(bcolors.GREEN + "Enter choice> " + bcolors.RESET))
                 tmp = sp.call('clear', shell=True)
-                if ch == 11:
+                if ch == 14:
                     exit()
                 else:
                     dispatch(ch)
