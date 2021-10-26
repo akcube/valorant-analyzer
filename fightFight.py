@@ -390,14 +390,33 @@ def get_kd():
                 k += int(entry["kills"])
                 d += int(entry["deaths"])
             if d == 0:
-                print(f"Player name: {name} | Player tag: {tag}")
+                print(f"Player name: {name} | Player tag: {tag} | K/D = ∞")
             elif (k / d) >= float(x):
-                print(f"Player name: {name} | Player tag: {tag}")
+                print(f"Player name: {name} | Player tag: {tag} | K/D = {k/d}")
     except Exception as e:
         printError()
         con.rollback()
-    return
 
+def get_kd_for_agent():
+    """Get a list of all agents for a specific player with K/D ≥ x"""
+    try:
+        playerName = input("Enter the player name: ")
+        playerTag = input("Enter the player tag: ")
+        x = input("Enter the value of x: ")
+        query = ("SELECT agent_id, kills, deaths FROM plays WHERE player_name = '%s' AND player_tag = '%s';" % (playerName, playerTag))
+        cur.execute(query)
+        retval = cur.fetchall()
+        for entry in retval:
+            k = entry["kills"]
+            d = entry["deaths"]
+            id = entry["agent_id"]
+            if d == 0:
+                print(f"Agent ID: {id} | K/D = ∞")
+            elif (k/d) >= float(x):
+                print(f"Agent ID: {id} | K/D = {k/d}")
+    except Exception as e:
+        printError()
+        con.rollback()
 
 def dispatch(ch):
     """
@@ -435,6 +454,8 @@ def dispatch(ch):
         get_matches_between_two_teams()
     elif ch == 16:
         get_kd()
+    elif ch == 17:
+        get_kd_for_agent()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
@@ -489,7 +510,8 @@ while 1:
                 print("14. Get total wins/losses of a player for a particular agent")
                 print("15. Get list of matches played between two teams")
                 print("16. Get a list of all players with k/d >= x")
-                print("17. Logout")
+                print("17. Get a list of all agents for a specific player with k/d >= x")
+                print("18. Logout")
                 print(bcolors.RESET)
 
                 ch = int(input(bcolors.GREEN + "Enter choice > " + bcolors.RESET))
