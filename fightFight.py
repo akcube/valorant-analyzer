@@ -228,6 +228,62 @@ def get_total_wins_by_agent():
         print("Error: Operation failed.")
         con.rollback()
 
+def get_matches_between_two_teams():
+    """
+    Get all the matches played between two teams
+    """
+    try:
+        matchInfo = TakeInput(["team_id_1", "team_id_2"], ["INT", "INT"])
+        query = ("SELECT match_id FROM match_description WHERE team_id = '%s';" % (matchInfo["team_id_1"]))
+        cur.execute(query)
+        team_one_dict = cur.fetchall()
+        query = ("SELECT match_id FROM match_description WHERE team_id = '%s';" % (matchInfo["team_id_2"]))
+        cur.execute(query)
+        team_two_dict = cur.fetchall()
+
+        team_one_matches = []
+        team_two_matches = []
+
+        for k in team_one_dict:
+            team_one_matches.append(k["match_id"])
+        for k in team_two_dict:
+            team_two_matches.append(k["match_id"])
+
+        common = set(team_one_matches) & set(team_two_matches)
+        for m in common:
+            print(m)
+
+    except Exception as e:
+        printError()
+        con.rollback()
+
+def get_kd():
+    """Get list of all players with K/D >= x"""
+    try:
+        x = input("Enter the value of x: ")
+        query = ("SELECT name, tag FROM player;")
+        cur.execute(query)
+        retval = cur.fetchall()
+        for player in retval:
+            name = player["name"]
+            tag = player["tag"]
+            k = 0
+            d = 0
+            query = ("SELECT kills, deaths FROM 5_stack_stats WHERE player_name = '%s' AND player_tag = '%s';" % (player["name"], player["tag"]))
+            cur.execute(query)
+            retval2 = cur.fetchall()
+            for entry in retval2:
+                k += int(entry["kills"])
+                d += int(entry["deaths"])
+            if d == 0:
+                print(f"Player name: {name} | Player tag: {tag}")
+            elif (k / d) >= float(x):
+                print(f"Player name: {name} | Player tag: {tag}")
+    except Exception as e:
+        printError()
+        con.rollback()
+    return
+
 def dispatch(ch):
     """
     Function that maps helper functions to option entered
@@ -260,6 +316,10 @@ def dispatch(ch):
         get_total_wins()
     elif(ch == 14):
         get_total_wins_by_agent()
+    elif(ch == 15):
+        get_matches_between_two_teams()
+    elif(ch == 16):
+        get_kd()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
@@ -310,7 +370,9 @@ while(1):
                 print("12. Partial search match for player name")
                 print("13. Get total wins/losses of player")
                 print("14. Get total wins/losses of a player for a particular agent")
-                print("15. Logout")
+                print("15. Get list of matches played between two teams")
+                print("16. Get a list of all players with k/d >= x")
+                print("17. Logout")
                 print(bcolors.RESET)
 
                 ch = int(input(bcolors.GREEN + "Enter choice> " + bcolors.RESET))
