@@ -49,7 +49,7 @@ def get_teams_by_player():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(bcolors.PURPLE + row["team_id"] + bcolors.RESET)
+            print(bcolors.PURPLE + str(row["team_id"]) + bcolors.RESET)
     except Exception as e:
         con.rollback()
         printError()
@@ -67,7 +67,7 @@ def get_matches_by_team():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(bcolors.PURPLE + row["match_id"] + bcolors.RESET)
+            print(bcolors.PURPLE + str(row["match_id"]) + bcolors.RESET)
     except Exception as e:
         con.rollback()
         printError()
@@ -114,28 +114,8 @@ def get_agent_details():
         cur.execute(query)
         namerows = cur.fetchall()
         for name in namerows:
-            print(bcolors.PURPLE + name["name"] + bcolors.RESET)
+            print(bcolors.PURPLE + str(name["name"]) + bcolors.RESET)
         print("")
-
-
-def get_total_wins_by_agent():
-    """Get total wins and losses of a player for a particular agent"""
-    try:
-        playerName = input(bcolors.GREEN + "Enter player name: " + bcolors.RESET)
-        playerTag = input(bcolors.GREEN + "Enter player tag: " + bcolors.RESET)
-        agentID = input(bcolors.GREEN + "Enter agent ID: " + bcolors.RESET)
-        query = (
-            "SELECT SUM(wins) FROM plays "
-            "WHERE player_name = '%s' AND player_tag = '%s" % (playerName, playerTag)
-        )
-        print(bcolors.PURPLE + query + bcolors.RESET)
-        cur.execute(query)
-        con.commit()
-    except Exception as e:
-        con.rollback()
-        printError()
-    return
-
 
 def insert_player():
     """Insert player into database"""
@@ -262,7 +242,7 @@ def partial_search_agent():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(bcolors.PURPLE + row["name"] + bcolors.RESET)
+            print(bcolors.PURPLE + str(row["name"]) + bcolors.RESET)
     except Exception as e:
         con.rollback()
         printError()
@@ -277,7 +257,7 @@ def partial_search_player():
         cur.execute(query)
         retval = cur.fetchall()
         for row in retval:
-            print(bcolors.PURPLE + row["name"] + bcolors.RESET)
+            print(bcolors.PURPLE + str(row["name"]) + bcolors.RESET)
     except Exception as e:
         con.rollback()
         printError()
@@ -361,7 +341,7 @@ def get_matches_between_two_teams():
 
         common = set(team_one_matches) & set(team_two_matches)
         for m in common:
-            print(bcolors.PURPLE + m + bcolors.RESET)
+            print(bcolors.PURPLE + str(m) + bcolors.RESET)
 
     except Exception as e:
         printError()
@@ -475,39 +455,37 @@ def dispatch(ch):
     elif ch == 5:
         delete_player()
     elif ch == 6:
-        get_total_wins_by_agent()
-    elif ch == 7:
         get_teams_by_player()
-    elif ch == 8:
+    elif ch == 7:
         get_matches_by_team()
-    elif ch == 9:
+    elif ch == 8:
         get_round_stats()
-    elif ch == 10:
+    elif ch == 9:
         get_agent_details()
-    elif ch == 11:
+    elif ch == 10:
         partial_search_agent()
-    elif ch == 12:
+    elif ch == 11:
         partial_search_player()
-    elif ch == 13:
+    elif ch == 12:
         get_total_wins()
-    elif ch == 14:
+    elif ch == 13:
         get_total_wins_by_agent()
-    elif ch == 15:
+    elif ch == 14:
         get_matches_between_two_teams()
-    elif ch == 16:
+    elif ch == 15:
         get_kd()
-    elif ch == 17:
+    elif ch == 16:
         get_kd_for_agent()
-    elif ch == 18:
+    elif ch == 17:
         get_winrate_for_agent()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
 
-password = getpass.getpass("Password: ")
 
 # Global
 while 1:
+    password = getpass.getpass("Password: ")
     tmp = sp.call("clear", shell=True)
 
     # Can be skipped if you want to hardcode username and password
@@ -543,29 +521,28 @@ while 1:
                 print("3. Update player region in table")  # Promote Employee
                 print("4. Update the lore of given agent")  # Employee Statistics
                 print("5. Delete player from database")
-                print("6. Get total wins by agent")
-                print("7. Get all teams a player has been a part of")
-                print("8. Get all the matches a team has played")
-                print("9. Get the round stats of a player")
-                print("10. Get the signature abilities of an agent")
-                print("11. Partial search match for agent")
-                print("12. Partial search match for player name")
-                print("13. Get total wins/losses of player")
-                print("14. Get total wins/losses of a player for a particular agent")
-                print("15. Get list of matches played between two teams")
-                print("16. Get a list of all players with k/d >= x")
+                print("6. Get all teams a player has been a part of")
+                print("7. Get all the matches a team has played")
+                print("8. Get the round stats of a player")
+                print("9. Get the signature abilities of an agent")
+                print("10. Partial search match for agent")
+                print("11. Partial search match for player name")
+                print("12. Get total wins/losses of player")
+                print("13. Get total wins/losses of a player for a particular agent")
+                print("14. Get list of matches played between two teams")
+                print("15. Get a list of all players with k/d >= x")
                 print(
-                    "17. Get a list of all agents for a specific player with k/d >= x"
+                    "16. Get a list of all agents for a specific player with k/d >= x"
                 )
                 print(
-                    "18. Get a list of all agents for a specific player with winrate >= x"
+                    "17. Get a list of all agents for a specific player with winrate >= x"
                 )
-                print("19. Logout")
+                print("18. Logout")
                 print(bcolors.RESET)
 
                 ch = int(input(bcolors.GREEN + "Enter choice > " + bcolors.RESET))
                 tmp = sp.call("clear", shell=True)
-                if ch == 19:
+                if ch == 18:
                     exit()
                 else:
                     dispatch(ch)
