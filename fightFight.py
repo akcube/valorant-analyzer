@@ -390,12 +390,21 @@ def get_kd():
                 k += int(entry["kills"])
                 d += int(entry["deaths"])
             if d == 0:
-                print(bcolors.GREEN + f"Player name: {name} | Player tag: {tag} | K/D = ∞" + bcolors.RESET)
+                print(
+                    bcolors.GREEN
+                    + f"Player name: {name} | Player tag: {tag} | K/D = ∞"
+                    + bcolors.RESET
+                )
             elif (k / d) >= float(x):
-                print(bcolors.GREEN + f"Player name: {name} | Player tag: {tag} | K/D = {k/d}" + bcolors.RESET)
+                print(
+                    bcolors.GREEN
+                    + f"Player name: {name} | Player tag: {tag} | K/D = {k/d}"
+                    + bcolors.RESET
+                )
     except Exception as e:
         printError()
         con.rollback()
+
 
 def get_kd_for_agent():
     """Get a list of all agents for a specific player with K/D ≥ x"""
@@ -403,7 +412,10 @@ def get_kd_for_agent():
         playerName = input(bcolors.GREEN + "Enter the player name: " + bcolors.RESET)
         playerTag = input(bcolors.GREEN + "Enter the player tag: " + bcolors.RESET)
         x = input(bcolors.GREEN + "Enter the value of x: " + bcolors.RESET)
-        query = ("SELECT agent_id, kills, deaths FROM plays WHERE player_name = '%s' AND player_tag = '%s';" % (playerName, playerTag))
+        query = (
+            "SELECT agent_id, kills, deaths FROM plays WHERE player_name = '%s' AND player_tag = '%s';"
+            % (playerName, playerTag)
+        )
         cur.execute(query)
         retval = cur.fetchall()
         for entry in retval:
@@ -412,11 +424,41 @@ def get_kd_for_agent():
             id = entry["agent_id"]
             if d == 0:
                 print(bcolors.PURPLE + f"Agent ID: {id} | K/D = ∞" + bcolors.RESET)
-            elif (k/d) >= float(x):
+            elif (k / d) >= float(x):
                 print(bcolors.PURPLE + f"Agent ID: {id} | K/D = {k/d}" + bcolors.RESET)
     except Exception as e:
         printError()
         con.rollback()
+
+
+def get_winrate_for_agent():
+    """Get a list of all agents for a specific player with win rate ≥ x"""
+    try:
+        playerName = input(bcolors.GREEN + "Enter the player name: " + bcolors.RESET)
+        playerTag = input(bcolors.GREEN + "Enter the player tag: " + bcolors.RESET)
+        x = input(bcolors.GREEN + "Enter the value of x: " + bcolors.RESET)
+        query = (
+            "SELECT agent_id, wins, matches_played FROM plays WHERE player_name = '%s' AND player_tag = '%s';"
+            % (playerName, playerTag)
+        )
+        cur.execute(query)
+        retval = cur.fetchall()
+        for entry in retval:
+            k = entry["wins"]
+            d = entry["matches_played"]
+            id = entry["agent_id"]
+            if d == 0:
+                print(bcolors.PURPLE + f"Agent ID: {id} | Win rate = ∞" + bcolors.RESET)
+            elif (k / d) >= float(x):
+                print(
+                    bcolors.PURPLE
+                    + f"Agent ID: {id} | Win rate = {k/d}"
+                    + bcolors.RESET
+                )
+    except Exception as e:
+        printError()
+        con.rollback()
+
 
 def dispatch(ch):
     """
@@ -456,6 +498,8 @@ def dispatch(ch):
         get_kd()
     elif ch == 17:
         get_kd_for_agent()
+    elif ch == 18:
+        get_winrate_for_agent()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
@@ -510,13 +554,18 @@ while 1:
                 print("14. Get total wins/losses of a player for a particular agent")
                 print("15. Get list of matches played between two teams")
                 print("16. Get a list of all players with k/d >= x")
-                print("17. Get a list of all agents for a specific player with k/d >= x")
-                print("18. Logout")
+                print(
+                    "17. Get a list of all agents for a specific player with k/d >= x"
+                )
+                print(
+                    "18. Get a list of all agents for a specific player with winrate >= x"
+                )
+                print("19. Logout")
                 print(bcolors.RESET)
 
                 ch = int(input(bcolors.GREEN + "Enter choice > " + bcolors.RESET))
                 tmp = sp.call("clear", shell=True)
-                if ch == 20:
+                if ch == 19:
                     exit()
                 else:
                     dispatch(ch)
