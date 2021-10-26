@@ -5,3 +5,16 @@ INSERT INTO round VALUES (2, 0, "JadeReaper", "balls", 3, 0, 0, 3, TRUE, TRUE, T
 
 INSERT INTO player VALUES ("JadeReaper", "balls", "2002-03-23", "00:00:10", 5, "LATAM", NULL, NULL);
 INSERT INTO player VALUES ("akcube", "s1mp", "2003-05-22", "00:00:11", 69, "KR", NULL, NULL);
+
+
+
+INSERT INTO player VALUES ("JadeReaper", "FY3F", "2011-09-01", "16:31:33", 916, "BR", NULL, NULL);
+INSERT INTO player VALUES ("akcube", "LP0H", "2006-04-19", "23:13:01", 915, "AP", NULL, NULL);
+INSERT INTO player VALUES ("DaMentia", "VN0S", "2010-06-01", "14:50:03", 726, "LATAM", NULL, NULL);
+INSERT INTO player VALUES ("Waxycuticle", "DN8L", "2017-02-12", "19:24:01", 3, "KR", NULL, NULL);
+INSERT INTO player VALUES ("Chicken", "AU5V", "2013-07-12", "23:52:46", 1801, "LATAM", NULL, NULL);
+INSERT INTO player VALUES ("Steiner", "FA2L", "2008-08-22", "16:57:17", 977, "KR", NULL, NULL);
+INSERT INTO player VALUES ("Taz", "DR6A", "2008-09-04", "15:41:57", 1017, "KR", NULL, NULL);
+INSERT INTO player VALUES ("WeedForSpeed", "QI2N", "2007-10-25", "18:34:55", 870, "BR", NULL, NULL);
+INSERT INTO player VALUES ("noxic", "NS6Z", "2008-07-12", "05:42:27", 1013, "KR", NULL, NULL);
+INSERT INTO player VALUES ("phish", "UH6D", "2019-03-16", "10:33:14", 1752, "NA", NULL, NULL);
