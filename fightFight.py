@@ -400,9 +400,9 @@ def get_kd():
 def get_kd_for_agent():
     """Get a list of all agents for a specific player with K/D ≥ x"""
     try:
-        playerName = input("Enter the player name: ")
-        playerTag = input("Enter the player tag: ")
-        x = input("Enter the value of x: ")
+        playerName = input(bcolors.GREEN + "Enter the player name: " + bcolors.RESET)
+        playerTag = input(bcolors.GREEN + "Enter the player tag: " + bcolors.RESET)
+        x = input(bcolors.GREEN + "Enter the value of x: " + bcolors.RESET)
         query = ("SELECT agent_id, kills, deaths FROM plays WHERE player_name = '%s' AND player_tag = '%s';" % (playerName, playerTag))
         cur.execute(query)
         retval = cur.fetchall()
@@ -411,9 +411,9 @@ def get_kd_for_agent():
             d = entry["deaths"]
             id = entry["agent_id"]
             if d == 0:
-                print(f"Agent ID: {id} | K/D = ∞")
+                print(bcolors.PURPLE + f"Agent ID: {id} | K/D = ∞" + bcolors.RESET)
             elif (k/d) >= float(x):
-                print(f"Agent ID: {id} | K/D = {k/d}")
+                print(bcolors.PURPLE + f"Agent ID: {id} | K/D = {k/d}" + bcolors.RESET)
     except Exception as e:
         printError()
         con.rollback()
