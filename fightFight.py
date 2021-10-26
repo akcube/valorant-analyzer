@@ -209,6 +209,25 @@ def get_total_wins():
         print("Error: Operation failed")
         con.rollback()
 
+def get_total_wins_by_agent():
+    """Get total wins and losses of a player for a particular agent"""
+    try:
+        playerName = input("Enter player name: ")
+        playerTag = input("Enter player tag: ")
+        agentID = input("Enter agent ID: ")
+        query = ("SELECT wins, matches_played FROM plays WHERE player_name = '%s' AND player_tag = '%s' AND agent_id = '%s';" % (playerName, playerTag, agentID))
+        cur.execute(query)
+        retval = cur.fetchall()
+        wins = 0
+        total = 0
+        for entry in retval:
+            wins += int(entry["wins"])
+            total += int(entry["matches_played"])
+        print(f"Wins: {wins} | Losses: {total - wins}")
+    except Exception as e:
+        print("Error: Operation failed.")
+        con.rollback()
+
 def dispatch(ch):
     """
     Function that maps helper functions to option entered
@@ -239,6 +258,8 @@ def dispatch(ch):
         partial_search_player()
     elif(ch == 13):
         get_total_wins()
+    elif(ch == 14):
+        get_total_wins_by_agent()
     else:
         print(bcolors.RED + "Error: Invalid Option" + bcolors.RESET)
 
@@ -288,12 +309,13 @@ while(1):
                 print("11. Partial search match for agent")
                 print("12. Partial search match for player name")
                 print("13. Get total wins/losses of player")
-                print("14. Logout")
-                print(bcolors.BLUE)
+                print("14. Get total wins/losses of a player for a particular agent")
+                print("15. Logout")
+                print(bcolors.RESET)
 
                 ch = int(input(bcolors.GREEN + "Enter choice> " + bcolors.RESET))
                 tmp = sp.call('clear', shell=True)
-                if ch == 14:
+                if ch == 20:
                     exit()
                 else:
                     dispatch(ch)
