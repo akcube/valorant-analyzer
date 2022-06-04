@@ -20,19 +20,19 @@ This project requires [MySQL Server](https://wiki.archlinux.org/title/MySQL) to 
 
 **apt**
 
-```
+```bash
 sudo apt-get install mysql-server
 ```
 
 **pacman**
 
-```
+```bash
 sudo pacman -S mysql
 ```
 
 If you run the Btrfs filesystem, you should consider disabling copy-on-write for the database directory for performance reasons
 
-```
+```bash
 chattr +C /var/lib/mysql/
 ```
 
@@ -40,7 +40,7 @@ chattr +C /var/lib/mysql/
 
 - Start MySQL by running the following command
 
-  ``` 
+  ```bash
   mysql -u <user_name> -p
   ```
 
@@ -48,7 +48,7 @@ chattr +C /var/lib/mysql/
 
 - Create a database named **VALORANTANALYZER** using the following commands. This will create a new user and grant access and modification priveleges to the new user.
 
-  ```
+  ```sql
   CREATE DATABASE VALORANTANALYZER CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
   CREATE USER '<user>'@'localhost' IDENTIFIED BY '<password>';
   GRANT ALL PRIVILEGES ON dota.* TO '<user>'@'localhost';
@@ -57,32 +57,32 @@ chattr +C /var/lib/mysql/
 
 - If you wish to, dump the sample database into **VALORANTANALYZER** from `core/SQL` 
 
-  ```
+  ```bash
    mysql -u <user> -p dota < dump.mysql
   ```
 
 ### Running the program
 
-![warning](https://github.githubassets.com/images/icons/emoji/unicode/26a0.png) Using python 3 is heavily recommended. Older version might cause issues.
+**NOTE** Using python 3 is heavily recommended. Older version might cause issues.
 
 - To use the CLI, you must install the necessary modules. You may make a virtual environment for this. Note that you are quite free to omit this step.
 
-  ```
+  ```bash
   python3 -m venv <venv_name>
   source <venv_name>/bin/activate
   pip3 install -r requirements.txt
   ```
 
-  - Next, create a `.env` file in `core/Python` and populate it with the following contents. Replace the relevant details.
+- Next, create a `.env` file in `core/Python` and populate it with the following contents. Replace the relevant details.
 
-    ```
-    MYSQL_HOST=<host> # Usually localhost
-    MYSQL_PORT=<port> # Usually 3306
-    MYSQL_USER=<uname>
-    ```
+  ```
+  MYSQL_HOST=<host> # Usually localhost
+  MYSQL_PORT=<port> # Usually 3306
+  MYSQL_USER=<uname>
+  ```
 
 - Change directories to `core/Python` and run the program using
-   ```
+   ```bash
    python3 valorant_analyzer.py
    ```
 
